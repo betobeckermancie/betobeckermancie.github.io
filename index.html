@@ -11,6 +11,8 @@
 <meta property="og:url" content="https://betobeckermancie.github.io/">
 <meta property="og:image" content="https://betobeckermancie.github.io/assets/pecsa/galeria_01_dbx_runs.jpg">
 <meta name="twitter:card" content="summary_large_image">
+<link rel="alternate" hreflang="es" href="https://betobeckermancie.github.io/">
+<link rel="alternate" hreflang="en" href="https://betobeckermancie.github.io/en.html">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%232E49D1'/%3E%3Crect x='6' y='18' width='5' height='8' rx='1.5' fill='%23fff'/%3E%3Crect x='13.5' y='12' width='5' height='14' rx='1.5' fill='%23fff'/%3E%3Crect x='21' y='6' width='5' height='20' rx='1.5' fill='%23fff'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -114,7 +116,13 @@ p { margin: 0 0 1rem; }
 }
 .theme-btn svg { width: 16px; height: 16px; }
 .brand { white-space: nowrap; }
+.lang { display: inline-flex; padding: 2px; border: 1px solid var(--rule); border-radius: 999px; background: var(--panel); }
+.top nav .lang a { font-size: .78rem; font-weight: 600; padding: 4px 9px; border-radius: 999px; color: var(--muted); line-height: 1.2; }
+.top nav .lang a:hover { color: var(--ink); }
+.top nav .lang a[aria-current="page"] { background: var(--ink); color: var(--paper); }
 @media (max-width: 640px) { .top nav a.opt { display: none; } .top nav { gap: 14px; } }
+@media (max-width: 480px) { .top nav a.opt2 { display: none; } }
+@media (max-width: 400px) { .top nav a.opt3 { display: none; } .top nav { gap: 10px; } }
 
 /* Portada */
 .hero { padding: 72px 0 40px; }
@@ -335,9 +343,13 @@ footer { border-top: 1px solid var(--rule); padding: 22px 0 30px; font-size: .88
   <div class="wrap">
     <a class="brand" href="#inicio">Heberto Barrera</a>
     <nav aria-label="Secciones">
-      <a href="#proyectos">Proyectos</a>
+      <a class="opt3" href="#proyectos">Proyectos</a>
       <a class="opt" href="#perfil">Experiencia</a>
-      <a href="#contacto">Contacto</a>
+      <a class="opt2" href="#contacto">Contacto</a>
+      <div class="lang" role="group" aria-label="Idioma">
+        <a href="./" lang="es" aria-current="page">ES</a>
+        <a href="en.html" lang="en" hreflang="en">EN</a>
+      </div>
       <button class="theme-btn" type="button" id="tema" aria-label="Cambiar entre tema claro y oscuro">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
       </button>
@@ -950,6 +962,11 @@ python run_pipeline.py --solo 9</pre>
       vImg.alt = img.alt;
       vTxt.textContent = fig.querySelector('figcaption').innerText.replace('\n', ': ');
       visor.showModal();
+    });
+  });
+  document.querySelectorAll('.lang a').forEach(function (a) {
+    a.addEventListener('click', function () {
+      if (location.hash) a.href = a.getAttribute('href').split('#')[0] + location.hash;
     });
   });
   document.getElementById('cerrar').addEventListener('click', function () { visor.close(); });
