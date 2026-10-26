@@ -1,0 +1,885 @@
+<!doctype html>
+<html lang="es-MX">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Heberto Barrera, ingeniero de datos</title>
+<meta name="description" content="Portafolio de Heberto Barrera, ingeniero y analista de datos en Saltillo, Coahuila: pipelines en Azure Databricks, Power BI y pronósticos con Python.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Heberto Barrera, ingeniero de datos">
+<meta property="og:description" content="Pipelines en Azure Databricks, tableros en Power BI y pronósticos con Python. Dos casos con datos reales.">
+<meta property="og:url" content="https://betobeckermancie.github.io/">
+<meta property="og:image" content="https://betobeckermancie.github.io/assets/pecsa/galeria_01_dbx_runs.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%232E49D1'/%3E%3Crect x='6' y='18' width='5' height='8' rx='1.5' fill='%23fff'/%3E%3Crect x='13.5' y='12' width='5' height='14' rx='1.5' fill='%23fff'/%3E%3Crect x='21' y='6' width='5' height='20' rx='1.5' fill='%23fff'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,650;12..96,750&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --paper: #F1F2EC;
+  --panel: #FFFFFF;
+  --ink: #15233B;
+  --muted: #566173;
+  --rule: #D4D8CC;
+  --accent: #2E49D1;
+  --accent-soft: #E3E7FB;
+  --c2: #A86A12;
+  --c2-soft: #F6EBD8;
+  --ok: #23845A;
+  --ok-soft: #DCEFE4;
+  --track: #E4E6DE;
+  --display: "Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
+  --body: "IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, "Cascadia Mono", Consolas, monospace;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper: #0E1520;
+    --panel: #152030;
+    --ink: #E6EAF1;
+    --muted: #9CA7B8;
+    --rule: #283549;
+    --accent: #93A4FF;
+    --accent-soft: #1E2A4D;
+    --c2: #E2B252;
+    --c2-soft: #33280F;
+    --ok: #5BC58D;
+    --ok-soft: #16332A;
+    --track: #1D2A3C;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --paper: #0E1520;
+  --panel: #152030;
+  --ink: #E6EAF1;
+  --muted: #9CA7B8;
+  --rule: #283549;
+  --accent: #93A4FF;
+  --accent-soft: #1E2A4D;
+  --c2: #E2B252;
+  --c2-soft: #33280F;
+  --ok: #5BC58D;
+  --ok-soft: #16332A;
+  --track: #1D2A3C;
+  color-scheme: dark;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--body);
+  font-size: 1.0625rem;
+  line-height: 1.62;
+  text-rendering: optimizeLegibility;
+}
+img { max-width: 100%; display: block; }
+a { color: var(--accent); text-underline-offset: 3px; text-decoration-thickness: 1px; }
+a:hover { text-decoration-thickness: 2px; }
+:focus-visible { outline: 2.5px solid var(--accent); outline-offset: 3px; border-radius: 4px; }
+code, .mono { font-family: var(--mono); font-size: .88em; }
+
+.wrap { max-width: 1120px; margin: 0 auto; padding: 0 24px; }
+@media (max-width: 600px) { .wrap { padding: 0 16px; } }
+
+h1, h2, h3, h4 { font-family: var(--display); font-weight: 650; line-height: 1.12; letter-spacing: -0.015em; margin: 0; }
+h2 { font-size: clamp(1.75rem, 3.2vw, 2.4rem); }
+h3 { font-size: clamp(1.45rem, 2.6vw, 1.95rem); }
+h4 { font-size: 1.2rem; font-weight: 650; margin-bottom: .6rem; }
+p { margin: 0 0 1rem; }
+.prose { max-width: 68ch; }
+.muted { color: var(--muted); }
+
+/* Encabezado */
+.top {
+  position: sticky; top: 0; z-index: 10;
+  background: color-mix(in srgb, var(--paper) 88%, transparent);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--rule);
+}
+.top .wrap { display: flex; align-items: center; justify-content: space-between; gap: 16px; height: 60px; }
+.brand { font-family: var(--display); font-weight: 650; font-size: 1.05rem; color: var(--ink); text-decoration: none; }
+.top nav { display: flex; gap: 22px; align-items: center; }
+.top nav a { color: var(--ink); text-decoration: none; font-size: .95rem; }
+.top nav a:hover { color: var(--accent); }
+.theme-btn {
+  border: 1px solid var(--rule); background: var(--panel); color: var(--ink);
+  width: 34px; height: 34px; border-radius: 50%; cursor: pointer; display: grid; place-items: center;
+}
+.theme-btn svg { width: 16px; height: 16px; }
+.brand { white-space: nowrap; }
+@media (max-width: 640px) { .top nav a.opt { display: none; } .top nav { gap: 14px; } }
+
+/* Portada */
+.hero { padding: 72px 0 40px; }
+.hero .who { font-size: 1.05rem; color: var(--muted); margin-bottom: 18px; }
+.hero .who strong { color: var(--ink); font-weight: 600; }
+.hero h1 { font-size: clamp(2.15rem, 5vw, 3.7rem); font-weight: 750; max-width: 20ch; letter-spacing: -0.025em; }
+.hero .lede { font-size: 1.15rem; max-width: 60ch; margin: 22px 0 28px; }
+.actions { display: flex; flex-wrap: wrap; gap: 12px; }
+.btn {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 11px 18px; border-radius: 10px; font-weight: 600; font-size: .98rem;
+  text-decoration: none; border: 1.5px solid var(--accent);
+}
+.btn.solid { background: var(--accent); color: var(--panel); }
+.btn.solid:hover { filter: brightness(1.08); }
+.btn.line { color: var(--accent); background: transparent; }
+.btn.line:hover { background: var(--accent-soft); }
+
+/* Corrida del job: el elemento firma de la página */
+.run {
+  margin-top: 48px;
+  background: var(--panel);
+  border: 1px solid var(--rule);
+  border-radius: 14px;
+  padding: 20px 22px 18px;
+}
+.run-head { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 16px; margin-bottom: 18px; }
+.run-head code { font-size: .92rem; font-weight: 500; overflow-wrap: anywhere; }
+.status {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: var(--ok-soft); color: var(--ok);
+  font-size: .85rem; font-weight: 600; padding: 3px 10px; border-radius: 999px;
+}
+.status::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--ok); }
+.run-head .dur { color: var(--muted); font-size: .9rem; }
+.tasks { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 6px; }
+.tasks li { display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+.tasks .bar { height: 10px; border-radius: 3px; background: var(--track); position: relative; overflow: hidden; }
+.tasks .bar::after {
+  content: ""; position: absolute; inset: 0; background: var(--ok);
+  transform-origin: left; transform: scaleX(1);
+  animation: llenar .45s ease-out both;
+  animation-delay: calc(var(--i) * 110ms + 250ms);
+}
+@keyframes llenar { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+@media (prefers-reduced-motion: reduce) { .tasks .bar::after { animation: none; } }
+.tasks .lbl { font-size: .78rem; line-height: 1.3; color: var(--muted); hyphens: auto; }
+.tasks li.grupo-eda .lbl { color: var(--ink); }
+.run-cap { font-size: .88rem; color: var(--muted); margin: 16px 0 0; }
+@media (max-width: 760px) {
+  .tasks { grid-template-columns: 1fr 1fr; gap: 10px 14px; }
+  .tasks li { flex-direction: row; align-items: center; }
+  .tasks .bar { width: 26px; flex: none; }
+}
+
+/* Secciones */
+section.block { padding: 72px 0; border-top: 1px solid var(--rule); }
+.sec-intro { margin: 10px 0 0; color: var(--muted); max-width: 60ch; }
+
+/* Caso de estudio */
+.case { margin-top: 56px; }
+.case + .case { margin-top: 96px; padding-top: 72px; border-top: 1px dashed var(--rule); }
+.case-head { display: grid; grid-template-columns: minmax(0, 1.7fr) minmax(0, 1fr); gap: 40px; align-items: start; }
+.case-head .lede { font-size: 1.12rem; margin-top: 14px; color: var(--muted); }
+.meta { margin: 0; background: var(--panel); border: 1px solid var(--rule); border-radius: 12px; padding: 18px 20px; display: grid; gap: 12px; }
+.meta div { display: grid; gap: 2px; }
+.meta dt { font-size: .82rem; color: var(--muted); }
+.meta dd { margin: 0; font-size: .95rem; font-weight: 500; }
+@media (max-width: 860px) { .case-head { grid-template-columns: 1fr; gap: 24px; } }
+
+.outcomes { list-style: none; margin: 32px 0 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); border-top: 2px solid var(--ink); }
+.outcomes li { padding: 16px 20px 4px 0; font-size: 1rem; line-height: 1.4; }
+.outcomes li + li { padding-left: 20px; border-left: 1px solid var(--rule); }
+.outcomes strong { display: block; font-family: var(--display); font-size: 1.6rem; font-weight: 750; letter-spacing: -0.02em; line-height: 1.1; margin-bottom: 4px; }
+@media (max-width: 760px) {
+  .outcomes { grid-template-columns: 1fr; }
+  .outcomes li + li { padding-left: 0; border-left: 0; border-top: 1px solid var(--rule); }
+}
+
+.part { margin-top: 52px; }
+.part > h4 { font-size: 1.3rem; }
+.two { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 40px; }
+@media (max-width: 860px) { .two { grid-template-columns: 1fr; gap: 28px; } }
+ul.plain { margin: 0; padding-left: 1.15rem; }
+ul.plain li { margin-bottom: .45rem; }
+ul.plain li::marker { color: var(--accent); }
+
+/* Diagrama del pipeline */
+.flow { display: grid; grid-template-columns: minmax(0, 1fr) 28px minmax(0, 1.25fr) 28px minmax(0, 1fr); align-items: stretch; margin-top: 18px; }
+.stage { background: var(--panel); border: 1px solid var(--rule); border-radius: 12px; padding: 16px 18px; }
+.stage.core { border: 1.5px solid var(--accent); }
+.stage h5 { font-family: var(--display); font-size: 1rem; font-weight: 650; margin: 0 0 10px; }
+.stage ul, .stage ol { margin: 0; padding: 0; list-style: none; display: grid; gap: 8px; }
+.stage li { font-size: .93rem; line-height: 1.35; }
+.stage li span { display: block; color: var(--muted); font-size: .84rem; }
+.stage ol { counter-reset: paso; }
+.stage ol li { counter-increment: paso; padding-left: 30px; position: relative; }
+.stage ol li::before {
+  content: counter(paso); position: absolute; left: 0; top: 0;
+  width: 21px; height: 21px; border-radius: 50%; background: var(--accent); color: var(--panel);
+  font-size: .75rem; font-weight: 600; display: grid; place-items: center;
+}
+.arrow { display: grid; place-items: center; color: var(--muted); }
+.arrow svg { width: 20px; height: 20px; }
+@media (max-width: 860px) {
+  .flow { grid-template-columns: 1fr; }
+  .arrow { height: 30px; }
+  .arrow svg { transform: rotate(90deg); }
+}
+
+/* Tablas */
+.table-scroll { overflow-x: auto; margin-top: 14px; border: 1px solid var(--rule); border-radius: 12px; background: var(--panel); }
+table { border-collapse: collapse; width: 100%; font-size: .93rem; }
+th, td { text-align: left; padding: 11px 14px; border-bottom: 1px solid var(--rule); vertical-align: top; }
+thead th { font-weight: 600; font-size: .85rem; color: var(--muted); background: color-mix(in srgb, var(--paper) 60%, var(--panel)); }
+tbody tr:last-child td { border-bottom: 0; }
+td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+td code { white-space: nowrap; }
+tr.total td { font-weight: 600; }
+
+/* Fórmulas */
+.formulas { margin: 14px 0 0; padding: 16px 18px; background: var(--panel); border: 1px solid var(--rule); border-radius: 12px; font-family: var(--mono); font-size: .86rem; line-height: 1.9; overflow-x: auto; }
+.formulas b { font-weight: 500; color: var(--accent); }
+pre.cmd { margin: 14px 0 0; padding: 16px 18px; background: var(--ink); color: var(--paper); border-radius: 12px; font-family: var(--mono); font-size: .85rem; line-height: 1.75; overflow-x: auto; }
+pre.cmd .c { opacity: .62; }
+
+/* Galería */
+.gallery { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; margin-top: 18px; }
+@media (max-width: 900px) { .gallery { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 560px) { .gallery { grid-template-columns: 1fr; } }
+.gallery figure { margin: 0; }
+.shot {
+  display: block; width: 100%; padding: 0; border: 1px solid var(--rule); border-radius: 10px; overflow: hidden;
+  background: var(--track); cursor: zoom-in; aspect-ratio: 16 / 10;
+}
+.shot img { width: 100%; height: 100%; object-fit: cover; object-position: top left; }
+.gallery figcaption { margin-top: 10px; font-size: .9rem; line-height: 1.4; }
+.gallery figcaption b { display: block; font-weight: 600; }
+.gallery figcaption span { color: var(--muted); }
+.sin-imagen .shot { display: grid; place-items: center; cursor: default; }
+.sin-imagen .shot img { display: none; }
+.sin-imagen .shot::after { content: "Imagen pendiente de subir"; color: var(--muted); font-size: .85rem; }
+
+dialog.visor { border: 0; padding: 0; background: transparent; max-width: min(1200px, 94vw); max-height: 94vh; }
+dialog.visor::backdrop { background: rgba(10, 16, 26, .82); }
+dialog.visor img { max-width: 100%; max-height: 82vh; border-radius: 8px; margin: 0 auto; }
+dialog.visor p { color: #E6EAF1; margin: 12px 0 0; font-size: .95rem; text-align: center; }
+dialog.visor button { position: absolute; top: 8px; right: 8px; border: 0; border-radius: 50%; width: 38px; height: 38px; background: rgba(255,255,255,.92); color: #15233B; font-size: 1.3rem; cursor: pointer; }
+
+/* Gráficas */
+.chart { margin-top: 14px; background: var(--panel); border: 1px solid var(--rule); border-radius: 12px; padding: 18px 20px; }
+.chart .title { font-weight: 600; margin: 0 0 4px; }
+.chart .sub { color: var(--muted); font-size: .88rem; margin: 0 0 14px; }
+.hbars { --name-w: 9.5rem; --val-w: 3.4rem; --gap: 12px; display: grid; gap: 9px; }
+.hrow { display: grid; grid-template-columns: var(--name-w) minmax(0, 1fr) var(--val-w); align-items: center; gap: var(--gap); font-size: .9rem; }
+.hrow .name { line-height: 1.25; }
+.hrow .track { height: 14px; background: var(--track); border-radius: 3px; position: relative; }
+.hrow .fill { position: absolute; left: 0; top: 0; bottom: 0; border-radius: 3px; background: var(--accent); width: var(--w); }
+.hrow .fill.dim { background: color-mix(in srgb, var(--accent) 38%, var(--track)); }
+.hrow .val { text-align: right; font-variant-numeric: tabular-nums; font-weight: 500; }
+.hbars.ref { position: relative; }
+.refline {
+  position: absolute; top: -6px; bottom: -6px; width: 0; border-left: 1.5px dashed var(--muted);
+  left: calc(var(--name-w) + var(--gap) + (100% - var(--name-w) - var(--val-w) - 2 * var(--gap)) * var(--at));
+}
+.legend-note { font-size: .84rem; color: var(--muted); margin: 12px 0 0; }
+@media (max-width: 560px) {
+  .hbars { --name-w: 7.2rem; --val-w: 3rem; --gap: 8px; }
+  .hrow { font-size: .85rem; }
+}
+
+td.barcell { min-width: 150px; }
+.cellbar { display: flex; align-items: center; gap: 8px; }
+.cellbar i { display: block; height: 10px; border-radius: 2px; width: var(--w); background: var(--accent); flex: none; max-width: 100px; }
+.cellbar.m i { background: var(--c2); }
+.cellbar span { font-variant-numeric: tabular-nums; }
+.key { display: flex; flex-wrap: wrap; gap: 16px; font-size: .85rem; color: var(--muted); margin-top: 10px; }
+.key span::before { content: ""; display: inline-block; width: 10px; height: 10px; border-radius: 2px; margin-right: 6px; vertical-align: -1px; background: var(--accent); }
+.key span.m::before { background: var(--c2); }
+
+.callout { margin-top: 18px; padding: 14px 18px; border-left: 3px solid var(--c2); background: var(--c2-soft); border-radius: 0 10px 10px 0; font-size: .97rem; }
+.callout p:last-child { margin: 0; }
+.chips { display: flex; flex-wrap: wrap; gap: 8px; margin: 10px 0 0; padding: 0; list-style: none; }
+.chips li { border: 1px solid var(--rule); background: var(--panel); border-radius: 999px; padding: 4px 12px; font-size: .88rem; }
+.chips.risk li { border-color: var(--c2); color: var(--c2); font-weight: 600; background: var(--c2-soft); }
+.note { font-size: .9rem; color: var(--muted); margin-top: 18px; }
+
+/* Perfil */
+.profile { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 48px; margin-top: 36px; }
+@media (max-width: 860px) { .profile { grid-template-columns: 1fr; gap: 32px; } }
+.skills { display: grid; gap: 20px; }
+.skills h4 { font-size: 1.05rem; margin-bottom: 8px; }
+.edu { list-style: none; margin: 0; padding: 0; display: grid; gap: 16px; }
+.edu li { padding-left: 16px; border-left: 2px solid var(--rule); }
+.edu b { display: block; font-weight: 600; }
+.edu span { color: var(--muted); font-size: .95rem; }
+
+/* Contacto */
+.contact { padding: 80px 0 88px; border-top: 1px solid var(--rule); }
+.contact h2 { max-width: 22ch; }
+.contact p { max-width: 58ch; margin-top: 14px; }
+.contact .actions { margin-top: 26px; }
+footer { border-top: 1px solid var(--rule); padding: 22px 0 30px; font-size: .88rem; color: var(--muted); }
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="#inicio">Heberto Barrera</a>
+    <nav aria-label="Secciones">
+      <a href="#proyectos">Proyectos</a>
+      <a class="opt" href="#perfil">Perfil</a>
+      <a href="#contacto">Contacto</a>
+      <button class="theme-btn" type="button" id="tema" aria-label="Cambiar entre tema claro y oscuro">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+      </button>
+    </nav>
+  </div>
+</header>
+
+<main id="inicio">
+  <section class="hero">
+    <div class="wrap">
+      <p class="who"><strong>Heberto Barrera</strong>, ingeniero y analista de datos en Saltillo, Coahuila</p>
+      <h1>Conecto fuentes de datos dispersas y las convierto en tableros y pronósticos que se usan para decidir.</h1>
+      <p class="lede">Más de 3 años trabajando con Azure Databricks, PySpark, Python, SQL, Snowflake y Power BI. He trabajado en Accenture, Grupo Soriana y Casas Pecsa.</p>
+      <div class="actions">
+        <a class="btn solid" href="#proyectos">Ver proyectos</a>
+        <a class="btn line" href="#contacto">Contactarme</a>
+      </div>
+
+      <div class="run" role="group" aria-label="Ejemplo de una corrida real de pipeline">
+        <div class="run-head">
+          <code>Pipeline_MetaAds_General_PorDia</code>
+          <span class="status">Satisfactorio</span>
+          <span class="dur">4 min 11 s</span>
+        </div>
+        <ol class="tasks">
+          <li style="--i:0"><span class="bar"></span><span class="lbl">Borrar CSV viejos</span></li>
+          <li style="--i:1"><span class="bar"></span><span class="lbl">Extracción Meta Ads</span></li>
+          <li style="--i:2"><span class="bar"></span><span class="lbl">Limpieza</span></li>
+          <li style="--i:3" class="grupo-eda"><span class="bar"></span><span class="lbl">Boxplots</span></li>
+          <li style="--i:4" class="grupo-eda"><span class="bar"></span><span class="lbl">Barras</span></li>
+          <li style="--i:5" class="grupo-eda"><span class="bar"></span><span class="lbl">Dispersión</span></li>
+          <li style="--i:6" class="grupo-eda"><span class="bar"></span><span class="lbl">Densidad</span></li>
+          <li style="--i:7" class="grupo-eda"><span class="bar"></span><span class="lbl">Heatmap</span></li>
+          <li style="--i:8" class="grupo-eda"><span class="bar"></span><span class="lbl">Pairplot</span></li>
+          <li style="--i:9" class="grupo-eda"><span class="bar"></span><span class="lbl">Top 5 mejores</span></li>
+          <li style="--i:10" class="grupo-eda"><span class="bar"></span><span class="lbl">Top 5 peores</span></li>
+          <li style="--i:11"><span class="bar"></span><span class="lbl">Carga a base de datos</span></li>
+        </ol>
+        <p class="run-cap">Las tareas reales del job de Meta Ads que construí en Azure Databricks, con 8 análisis exploratorios en cada corrida. Esta fue la ejecución del 18 de marzo de 2025.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="block" id="proyectos">
+    <div class="wrap">
+      <h2>Proyectos</h2>
+      <p class="sec-intro">Dos casos con datos reales, desde la extracción hasta la decisión que habilitaron.</p>
+
+      <!-- Caso 1: Pecsa -->
+      <article class="case" id="pecsa" aria-labelledby="pecsa-t">
+        <div class="case-head">
+          <div>
+            <h3 id="pecsa-t">Automatización de datos de marketing y ventas para una desarrolladora inmobiliaria</h3>
+            <p class="lede">Pipelines ETL en Azure Databricks, análisis exploratorio automatizado y un informe en Power BI para decidir cada semana dónde invertir en publicidad.</p>
+          </div>
+          <dl class="meta">
+            <div><dt>Rol</dt><dd>Ingeniero y analista de datos</dd></div>
+            <div><dt>Empresa</dt><dd>Casas Pecsa</dd></div>
+            <div><dt>Periodo</dt><dd>2024 a 2025</dd></div>
+            <div><dt>Herramientas</dt><dd>Azure Databricks, Python, pandas, APIs REST, OAuth 2.0, Power BI, DAX, ManyChat, Zapier</dd></div>
+          </dl>
+        </div>
+
+        <ul class="outcomes">
+          <li><strong>−60%</strong>de tiempo de análisis manual</li>
+          <li><strong>5 fuentes</strong>integradas en un flujo diario</li>
+          <li><strong>21 páginas</strong>de Power BI que se actualizan solas</li>
+        </ul>
+
+        <div class="part two">
+          <div class="prose">
+            <h4>El reto</h4>
+            <p>El equipo comercial invertía en campañas de Meta y Google, agendaba citas en Calendly y Google Sheets, y registraba separaciones, ventas y cancelaciones en su plataforma web. Cada fuente vivía por separado y el reporte para dirección se armaba a mano cada semana.</p>
+            <p>El objetivo era conectar la inversión en anuncios con lo que pasa después para medir el costo real de cada cita, separación y venta, y ajustar la inversión semana a semana.</p>
+          </div>
+          <div>
+            <h4>Mis responsabilidades</h4>
+            <ul class="plain">
+              <li>Diseño y orquestación de los jobs en Databricks.</li>
+              <li>Conexión a APIs y autenticación OAuth 2.0 de Calendly.</li>
+              <li>Reglas de limpieza y gobernanza de datos.</li>
+              <li>Análisis exploratorio y definición de KPIs.</li>
+              <li>Modelo de datos, medidas DAX y diseño del informe en Power BI.</li>
+              <li>Presentación semanal de resultados a dirección.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="part">
+          <h4>Cómo funciona</h4>
+          <div class="flow">
+            <div class="stage">
+              <h5>Fuentes</h5>
+              <ul>
+                <li>Meta Ads Manager<span>Campañas y anuncios por día</span></li>
+                <li>Google Ads<span>Inversión y rendimiento</span></li>
+                <li>Calendly<span>Citas agendadas, OAuth 2.0</span></li>
+                <li>Google Sheets<span>Registro de citas vía API</span></li>
+                <li>Plataforma web de ventas<span>Separados, vendidos y cancelados, API paginada</span></li>
+              </ul>
+            </div>
+            <div class="arrow" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></div>
+            <div class="stage core">
+              <h5>Jobs en Azure Databricks</h5>
+              <ol>
+                <li>Extracción diaria<span>Python y requests contra cada API</span></li>
+                <li>Limpieza y normalización<span>pandas: duplicados, columnas y formatos</span></li>
+                <li>Análisis exploratorio<span>8 notebooks de EDA en cada corrida</span></li>
+                <li>Carga<span>CSV procesados hacia la base de datos</span></li>
+              </ol>
+            </div>
+            <div class="arrow" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></div>
+            <div class="stage">
+              <h5>Consumo</h5>
+              <ul>
+                <li>Power BI<span>21 páginas, 8 tablas, medidas DAX y actualización automática</span></li>
+                <li>ManyChat y Zapier<span>Seguimiento por WhatsApp a leads que no responden</span></li>
+                <li>Junta semanal<span>Dirección decide canal, anuncio y horario donde invertir</span></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="part">
+          <h4>Un job por fuente, con tareas encadenadas</h4>
+          <p class="prose">Si una tarea falla, las siguientes no corren y el error queda visible en el historial de ejecuciones.</p>
+          <div class="table-scroll">
+            <table>
+              <thead><tr><th>Job</th><th>Fuente</th><th>Qué hace</th></tr></thead>
+              <tbody>
+                <tr><td><code>Pipeline_MetaAds_General_PorDia</code></td><td>Meta Ads Manager</td><td>Borra CSV viejos, extrae métricas diarias por anuncio, limpia, corre 8 análisis y carga a la base de datos.</td></tr>
+                <tr><td><code>Pipeline_CitasGoogleSheets</code></td><td>Google Sheets</td><td>Extrae y limpia las citas registradas para cruzarlas con la inversión.</td></tr>
+                <tr><td><code>Pipelines_PagWebSeparados</code><br><code>Pipelines_PagWebVendidos</code><br><code>Pipelines_PagWebCancelado</code></td><td>Plataforma web de ventas</td><td>Actualiza los datos previos, extrae y limpia página por página y convierte a base de datos.</td></tr>
+                <tr><td><code>Pipelines_KPIS</code></td><td>KPIs de ventas</td><td>Consolida los indicadores comerciales en una tabla para Power BI.</td></tr>
+                <tr><td><code>TokenCalendly</code></td><td>Calendly</td><td>Flujo OAuth 2.0 para obtener el token de acceso y extraer las citas.</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="part two">
+          <div>
+            <h4>Medidas clave del modelo</h4>
+            <div class="formulas" role="list">
+              <div role="listitem"><b>Costo por cita</b> = Inversión total Ads / Citas</div>
+              <div role="listitem"><b>Costo por separación</b> = Inversión total Ads / Separaciones</div>
+              <div role="listitem"><b>% Conversión</b> = (Separaciones / Citas) × 100</div>
+              <div role="listitem"><b>% ROI</b> = (Ventas − Inversión) / Inversión × 100</div>
+            </div>
+            <p class="note">El modelo tiene 8 tablas: citas, costos e inversión por canal, transacciones web, KPIs y calendario. El informe cubre ventas y cancelaciones de 2022 a 2025.</p>
+          </div>
+          <div>
+            <h4>Resultados</h4>
+            <ul class="plain">
+              <li>Más de 60% menos tiempo de análisis manual: el reporte ya no se arma a mano.</li>
+              <li>Reportes estandarizados para que dirección decida la inversión con datos cada semana.</li>
+              <li>Identificación de los horarios en que los anuncios rinden más.</li>
+              <li>Mensajes automáticos por WhatsApp a los registros con estatus “No responde”, sin que el asesor tenga que buscarlos.</li>
+              <li>En cada corrida: outliers con boxplots, correlaciones entre clics, costo por clic y conversiones, y el ranking de los 5 mejores y peores anuncios.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="part">
+          <h4>Capturas del proyecto</h4>
+          <div class="gallery">
+            <figure>
+              <button class="shot" type="button" aria-label="Ampliar: pipeline diario de Meta Ads en Azure Databricks">
+                <img src="assets/pecsa/galeria_01_dbx_runs.jpg" alt="Historial de ejecuciones del job de Meta Ads en Azure Databricks, de enero a marzo de 2025" loading="lazy" onerror="this.closest('figure').classList.add('sin-imagen')">
+              </button>
+              <figcaption><b>Pipeline diario de Meta Ads</b><span>Historial de ejecuciones en Azure Databricks, de enero a marzo de 2025.</span></figcaption>
+            </figure>
+            <figure>
+              <button class="shot" type="button" aria-label="Ampliar: tareas encadenadas del job">
+                <img src="assets/pecsa/galeria_02_dbx_tasks.jpg" alt="Más de 10 tareas encadenadas del job en un clúster DBR 14.3 LTS con Spark 3.5" loading="lazy" onerror="this.closest('figure').classList.add('sin-imagen')">
+              </button>
+              <figcaption><b>Más de 10 tareas encadenadas</b><span>Notebooks de EDA en un clúster DBR 14.3 LTS con Spark 3.5.</span></figcaption>
+            </figure>
+            <figure>
+              <button class="shot" type="button" aria-label="Ampliar: análisis exploratorio automatizado">
+                <img src="assets/pecsa/galeria_03_dbx_box.jpg" alt="Boxplot de la distribución de clics por anuncio para detectar outliers" loading="lazy" onerror="this.closest('figure').classList.add('sin-imagen')">
+              </button>
+              <figcaption><b>Análisis exploratorio automatizado</b><span>Outliers en clics por anuncio, con pandas y matplotlib.</span></figcaption>
+            </figure>
+            <figure>
+              <button class="shot" type="button" aria-label="Ampliar: costo por cita y por separación en Power BI">
+                <img src="assets/pecsa/galeria_04_pbi_costos.jpg" alt="Página de Power BI con costo por cita, costo por separación y porcentaje de conversión por mes" loading="lazy" onerror="this.closest('figure').classList.add('sin-imagen')">
+              </button>
+              <figcaption><b>Costo por cita y por separación</b><span>Tendencia mensual y % de conversión en Power BI.</span></figcaption>
+            </figure>
+            <figure>
+              <button class="shot" type="button" aria-label="Ampliar: embudo comercial 2024 contra 2025">
+                <img src="assets/pecsa/galeria_05_pbi_embudo.jpg" alt="Embudo comercial en Power BI: clientes iniciados, separados, cancelados y vendidos, 2024 contra 2025" loading="lazy" onerror="this.closest('figure').classList.add('sin-imagen')">
+              </button>
+              <figcaption><b>Embudo comercial 2024 contra 2025</b><span>Iniciados, separados, cancelados y vendidos, con filtro de fechas.</span></figcaption>
+            </figure>
+            <figure>
+              <button class="shot" type="button" aria-label="Ampliar: modelo de datos en Power BI">
+                <img src="assets/pecsa/galeria_06_pbi_modelo.jpg" alt="Modelo de datos en Power BI con 8 tablas relacionadas" loading="lazy" onerror="this.closest('figure').classList.add('sin-imagen')">
+              </button>
+              <figcaption><b>Modelo de datos</b><span>8 tablas: citas, inversión por canal, transacciones web, KPIs y calendario.</span></figcaption>
+            </figure>
+          </div>
+        </div>
+      </article>
+
+      <!-- Caso 2: empresa de eventos -->
+      <article class="case" id="eventos" aria-labelledby="eventos-t">
+        <div class="case-head">
+          <div>
+            <h3 id="eventos-t">De 6 hojas de cálculo a un pronóstico de 12 meses</h3>
+            <p class="lede">Pipeline de datos, análisis de rentabilidad y machine learning para una empresa de eventos sociales y empresariales en Saltillo, con datos reales de 2021 a 2026.</p>
+          </div>
+          <dl class="meta">
+            <div><dt>Rol</dt><dd>Ingeniero y analista de datos</dd></div>
+            <div><dt>Empresa</dt><dd>Eventos sociales y empresariales en Saltillo, Ramos Arizpe y Arteaga</dd></div>
+            <div><dt>Datos</dt><dd>Mayo 2021 a septiembre 2026</dd></div>
+            <div><dt>Origen</dt><dd>Proyecto del Diplomado en Ciencia de Datos e IA, UAdeC</dd></div>
+            <div><dt>Herramientas</dt><dd>Python, pandas, NumPy, statsmodels, scikit-learn, SciPy, matplotlib, seaborn, Jupyter, Parquet, Power BI</dd></div>
+          </dl>
+        </div>
+
+        <ul class="outcomes">
+          <li><strong>502 eventos</strong>de 6 temporadas en una sola fuente confiable</li>
+          <li><strong>24% de error</strong>a 30 días del mes, contra 31% de la línea base</li>
+          <li><strong>4 meses en riesgo</strong>detectados con meses de anticipación</li>
+        </ul>
+
+        <div class="part two">
+          <div class="prose">
+            <h4>El reto</h4>
+            <p>La empresa ofrece DJ, audio e iluminación para XV años, bodas, posadas, cumpleaños y eventos empresariales. Toda la operación vivía en una agenda de Google Sheets por temporada, cada una con columnas y formatos distintos.</p>
+            <p>Las decisiones sobre cuánto invertir en anuncios, en qué meses y qué paquetes impulsar se tomaban por intuición. El objetivo fue encontrar qué hace crecer las separaciones, priorizar los tickets altos y anticipar los próximos 12 meses.</p>
+          </div>
+          <div>
+            <h4>Preguntas de negocio</h4>
+            <ul class="plain">
+              <li>¿Qué tipo de evento deja más dinero: el que más vende o el que tiene más margen?</li>
+              <li>¿En qué meses se vende y con cuánta anticipación aparta cada tipo de cliente?</li>
+              <li>¿Cuánto cuesta cada separación en anuncios y conviene invertir más?</li>
+              <li>¿Cuántos eventos y cuánto dinero esperar en los próximos 12 meses?</li>
+              <li>¿Qué meses no alcanzan a cubrir los costos fijos?</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="part">
+          <h4>Un pipeline que se regenera con un comando</h4>
+          <p class="prose"><code>run_pipeline.py</code> ejecuta 11 pasos en orden con <code>nbconvert</code>, vuelve a leer las agendas desde Google Sheets y se detiene en el paso que falle. Se puede reanudar desde cualquier paso o correr uno solo.</p>
+            <div class="table-scroll">
+              <table>
+                <thead><tr><th>Paso</th><th>Componente</th><th>Salida</th></tr></thead>
+                <tbody>
+                  <tr><td class="num">1 a 6</td><td><code>limpieza_&lt;temporada&gt;.ipynb</code></td><td>Una agenda limpia por temporada: 2020, 2021‑22, 2023, 2024, 2025 y 2026</td></tr>
+                  <tr><td class="num">7 y 8</td><td><code>ads_2025</code>, <code>ads_2026</code></td><td>Inversión mensual en Meta Ads</td></tr>
+                  <tr><td class="num">9</td><td><code>build_historico.py</code></td><td>Histórico consolidado en CSV y Parquet, con duplicados resueltos</td></tr>
+                  <tr><td class="num">10 y 11</td><td><code>01_historico</code>, <code>02_analisis_visual</code></td><td>Métricas, gráficas y tabla mensual para Power BI</td></tr>
+                  <tr><td class="num">Aparte</td><td><code>03_forecasting_ml.ipynb</code></td><td>Modelos, backtest, pronóstico de 12 meses y resumen ejecutivo</td></tr>
+                </tbody>
+              </table>
+            </div>
+          <div class="two" style="margin-top:28px">
+            <div>
+              <h4>Uso</h4>
+<pre class="cmd" style="margin-top:0"><span class="c"># Corre los 11 pasos</span>
+python run_pipeline.py
+
+<span class="c"># Reanuda desde el paso 7</span>
+python run_pipeline.py --desde 7
+
+<span class="c"># Corre solo la consolidación</span>
+python run_pipeline.py --solo 9</pre>
+            </div>
+            <div>
+              <h4>Reglas de limpieza</h4>
+              <ul class="plain">
+                <li>Lectura directa de cada hoja con pandas, sin copiar y pegar.</li>
+                <li>Esquema común: columnas renombradas y filas fantasma eliminadas.</li>
+                <li>Fechas con formato mixto. Encontré un error que descartaba en silencio las fechas de 2026 que traían hora.</li>
+                <li>Montos con texto, signos y comas convertidos a número.</li>
+                <li>Clientes repetidos entre temporadas marcados y contratos divididos unidos en un solo evento.</li>
+                <li>31 etiquetas de tipo de evento escritas a mano, agrupadas en 13 tipos.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="part">
+          <h4>Calidad de los datos por temporada</h4>
+          <p class="prose">Medir la cobertura de cada campo antes de analizar decidió qué se podía concluir. Desde 2025 más del 94% de los eventos registra su ganancia neta; antes de 2024, ninguno. Por eso el margen se mide de 2025 en adelante.</p>
+          <div class="table-scroll">
+            <table>
+              <thead><tr><th>Temporada</th><th class="num">Filas</th><th class="num">Válidas</th><th class="num">Con fecha de separación</th><th class="num">Con ganancia neta</th></tr></thead>
+              <tbody>
+                <tr><td>2020</td><td class="num">8</td><td class="num">4</td><td class="num">25%</td><td class="num">0%</td></tr>
+                <tr><td>2021‑22</td><td class="num">53</td><td class="num">53</td><td class="num">76%</td><td class="num">0%</td></tr>
+                <tr><td>2023</td><td class="num">55</td><td class="num">55</td><td class="num">84%</td><td class="num">0%</td></tr>
+                <tr><td>2024</td><td class="num">77</td><td class="num">75</td><td class="num">96%</td><td class="num">8%</td></tr>
+                <tr><td>2025</td><td class="num">136</td><td class="num">136</td><td class="num">93%</td><td class="num">96%</td></tr>
+                <tr><td>2026</td><td class="num">174</td><td class="num">169</td><td class="num">98%</td><td class="num">94%</td></tr>
+                <tr class="total"><td>Total</td><td class="num">503</td><td class="num">492</td><td class="num">92%</td><td class="num">60%</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="part">
+          <h4>Lo que más vende no es lo que más deja</h4>
+          <p class="prose">De 2023 a 2025 los eventos pasaron de 55 a 135 y el ingreso bruto se cuadruplicó. El ticket promedio subió de $2,999 en 2021 a $6,812 en 2026, y el margen neto de los últimos 12 meses completos fue de 29.7%.</p>
+          <div class="table-scroll">
+            <table>
+              <thead><tr><th>Tipo de evento</th><th class="num">Eventos</th><th>% del ingreso</th><th class="num">Ticket promedio</th><th>Margen neto</th></tr></thead>
+              <tbody>
+                <tr><td>XV años</td><td class="num">68</td><td class="barcell"><div class="cellbar"><i style="--w:100px"></i><span>44.1%</span></div></td><td class="num">$7,785</td><td class="barcell"><div class="cellbar m"><i style="--w:43px"></i><span>24%</span></div></td></tr>
+                <tr><td>Bodas</td><td class="num">33</td><td class="barcell"><div class="cellbar"><i style="--w:44px"></i><span>19.2%</span></div></td><td class="num">$6,971</td><td class="barcell"><div class="cellbar m"><i style="--w:52px"></i><span>29%</span></div></td></tr>
+                <tr><td>Posadas</td><td class="num">17</td><td class="barcell"><div class="cellbar"><i style="--w:23px"></i><span>10.2%</span></div></td><td class="num">$7,184</td><td class="barcell"><div class="cellbar m"><i style="--w:70px"></i><span>39%</span></div></td></tr>
+                <tr><td>Cumpleaños jóvenes</td><td class="num">22</td><td class="barcell"><div class="cellbar"><i style="--w:19px"></i><span>8.5%</span></div></td><td class="num">$4,622</td><td class="barcell"><div class="cellbar m"><i style="--w:100px"></i><span>56%</span></div></td></tr>
+                <tr><td>Cumpleaños familiares</td><td class="num">16</td><td class="barcell"><div class="cellbar"><i style="--w:11px"></i><span>4.8%</span></div></td><td class="num">$3,624</td><td class="barcell"><div class="cellbar m"><i style="--w:52px"></i><span>29%</span></div></td></tr>
+                <tr><td>Graduaciones</td><td class="num">6</td><td class="barcell"><div class="cellbar"><i style="--w:9px"></i><span>4.1%</span></div></td><td class="num">$8,298</td><td class="barcell"><div class="cellbar m"><i style="--w:38px"></i><span>21%</span></div></td></tr>
+                <tr><td>Infantiles</td><td class="num">10</td><td class="barcell"><div class="cellbar"><i style="--w:9px"></i><span>3.8%</span></div></td><td class="num">$4,584</td><td class="barcell"><div class="cellbar m"><i style="--w:54px"></i><span>30%</span></div></td></tr>
+                <tr><td>Empresariales</td><td class="num">4</td><td class="barcell"><div class="cellbar"><i style="--w:8px"></i><span>3.4%</span></div></td><td class="num">$10,199</td><td class="barcell"><div class="cellbar m"><i style="--w:70px"></i><span>39%</span></div></td></tr>
+                <tr><td>Otros</td><td class="num">10</td><td class="barcell"><div class="cellbar"><i style="--w:5px"></i><span>2.0%</span></div></td><td class="num">$2,353</td><td class="barcell"><div class="cellbar m"><i style="--w:16px"></i><span>9%</span></div></td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="key"><span>% del ingreso</span><span class="m">Margen neto</span></div>
+          <div class="callout"><p>Los XV años traen el 44% del ingreso, pero con uno de los márgenes más bajos. El volumen viene de los XV; el margen, de los cumpleaños de jóvenes, las posadas y los eventos empresariales, que además tienen el ticket más alto.</p></div>
+        </div>
+
+        <div class="part two">
+          <div>
+            <h4>Cuándo se vende y con cuánto tiempo</h4>
+            <p>Diciembre vende 2.2 veces un mes promedio, junio 2.0 y agosto 1.8. Enero, febrero y abril quedan entre 0.2 y 0.3. Por fecha de cierre de contrato, mayo, septiembre y noviembre son los meses con más separaciones.</p>
+            <p>La anticipación cambia mucho por tipo de evento, así que cada campaña tiene que salir con su propio margen de tiempo.</p>
+          </div>
+          <div class="chart">
+            <p class="title">Días entre la separación y el evento</p>
+            <p class="sub">Mediana por tipo de evento. La línea punteada marca la mediana global de 30 días.</p>
+            <div class="hbars ref">
+              <span class="refline" style="--at: 0.4286" aria-hidden="true"></span>
+              <div class="hrow"><span class="name">Empresariales</span><span class="track"><span class="fill" style="--w:14.3%"></span></span><span class="val">10</span></div>
+              <div class="hrow"><span class="name">Cumpleaños jóvenes</span><span class="track"><span class="fill" style="--w:25.7%"></span></span><span class="val">18</span></div>
+              <div class="hrow"><span class="name">Cumpleaños familiares</span><span class="track"><span class="fill" style="--w:30%"></span></span><span class="val">21</span></div>
+              <div class="hrow"><span class="name">Posadas</span><span class="track"><span class="fill" style="--w:31.4%"></span></span><span class="val">22</span></div>
+              <div class="hrow"><span class="name">XV años</span><span class="track"><span class="fill" style="--w:68.6%"></span></span><span class="val">48</span></div>
+              <div class="hrow"><span class="name">Bodas</span><span class="track"><span class="fill" style="--w:81.4%"></span></span><span class="val">57</span></div>
+              <div class="hrow"><span class="name">Graduaciones</span><span class="track"><span class="fill" style="--w:100%"></span></span><span class="val">70</span></div>
+            </div>
+            <p class="legend-note">Los eventos empresariales se cierran con 10 días y funcionan con campañas de corto plazo; bodas y graduaciones necesitan casi dos meses.</p>
+          </div>
+        </div>
+
+        <div class="part">
+          <h4>Duplicar la inversión en anuncios no duplicó las separaciones</h4>
+          <div class="two">
+            <div class="table-scroll" style="margin-top:0">
+              <table>
+                <thead><tr><th>Meta Ads</th><th class="num">2025</th><th class="num">2026 (ene a sep)</th></tr></thead>
+                <tbody>
+                  <tr><td>Inversión total</td><td class="num">$69,512</td><td class="num">$121,632</td></tr>
+                  <tr><td>Inversión promedio al mes</td><td class="num">$6,319</td><td class="num">$13,515</td></tr>
+                  <tr><td>Separaciones</td><td class="num">136</td><td class="num">145</td></tr>
+                  <tr><td>Separaciones por mes</td><td class="num">12.4</td><td class="num">16.1</td></tr>
+                  <tr><td>Costo por separación</td><td class="num">$511</td><td class="num">$839</td></tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="prose">
+              <p>En 2026 la inversión mensual subió 114%, pero las separaciones por mes solo 30%. 2025 cuenta 11 meses con inversión.</p>
+              <p>Un modelo binomial negativo estimó una elasticidad de 0.38 (IC 95%: 0.09 a 0.66): 10% más de inversión trae cerca de 3.8% más separaciones. La siguiente mejora no está en gastar más, sino en cuándo y en qué tipo de evento invertir.</p>
+              <p class="muted">Con 20 meses de datos el resultado es orientativo, y la relación puede ir al revés: se invierte más en temporada alta.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="part">
+          <h4>Seis modelos y una regla: superar a la línea base</h4>
+          <div class="table-scroll">
+            <table>
+              <thead><tr><th>Modelo</th><th>Idea</th><th>Horizonte</th></tr></thead>
+              <tbody>
+                <tr><td>M1 Ingenuo estacional</td><td>Mismo mes del año anterior por el crecimiento anual</td><td>Línea base</td></tr>
+                <tr><td>M2 Holt-Winters</td><td>Tendencia amortiguada y estacionalidad de 12 meses</td><td>1 a 12 meses</td></tr>
+                <tr><td>M3 SARIMA</td><td>Búsqueda por AIC sobre la serie en logaritmo</td><td>1 a 12 meses</td></tr>
+                <tr><td>M4 Curva de reservas</td><td>Lo ya apartado entre la parte que suele estar apartada a esa anticipación</td><td>1 a 3 meses</td></tr>
+                <tr><td>M5 Gradient Boosting y Random Forest</td><td>Rezagos, mes, tendencia y separaciones</td><td>1 a 12 meses</td></tr>
+                <tr><td>M6 Anuncios</td><td>Binomial negativa: separaciones según log(inversión) y estacionalidad</td><td>Escenarios</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p class="prose" style="margin-top:16px">Tres pruebas sin ver el futuro: origen fijo (entrenar hasta octubre de 2025 y pronosticar el resto), origen rodante (1, 3 y 6 meses desde cada mes de 2025 y 2026) y curva de reservas (simular estar 60, 30 y 15 días antes de cada mes). La métrica es el WAPE; no usé MAPE porque hay meses en cero.</p>
+          <div class="two">
+            <div class="chart">
+              <p class="title">Error en eventos con origen fijo</p>
+              <p class="sub">WAPE, menor es mejor</p>
+              <div class="hbars">
+                <div class="hrow"><span class="name">M3 SARIMA</span><span class="track"><span class="fill" style="--w:46.6%"></span></span><span class="val">27%</span></div>
+                <div class="hrow"><span class="name">M1 Línea base</span><span class="track"><span class="fill dim" style="--w:50%"></span></span><span class="val">29%</span></div>
+                <div class="hrow"><span class="name">M2 Holt-Winters</span><span class="track"><span class="fill dim" style="--w:77.6%"></span></span><span class="val">45%</span></div>
+                <div class="hrow"><span class="name">M5b Random Forest</span><span class="track"><span class="fill dim" style="--w:82.8%"></span></span><span class="val">48%</span></div>
+                <div class="hrow"><span class="name">M5 Gradient Boosting</span><span class="track"><span class="fill dim" style="--w:100%"></span></span><span class="val">58%</span></div>
+              </div>
+            </div>
+            <div class="chart">
+              <p class="title">Error en eventos 30 días antes del mes</p>
+              <p class="sub">WAPE, menor es mejor</p>
+              <div class="hbars">
+                <div class="hrow"><span class="name">M4 Reservas y modelo</span><span class="track"><span class="fill" style="--w:41.4%"></span></span><span class="val">24%</span></div>
+                <div class="hrow"><span class="name">M3 SARIMA</span><span class="track"><span class="fill dim" style="--w:51.7%"></span></span><span class="val">30%</span></div>
+                <div class="hrow"><span class="name">M1 Línea base</span><span class="track"><span class="fill dim" style="--w:53.4%"></span></span><span class="val">31%</span></div>
+              </div>
+              <p class="legend-note">Misma escala que la gráfica de origen fijo (0 a 58%).</p>
+            </div>
+          </div>
+          <div class="callout"><p>Los modelos de árboles quedaron peor que la línea base: con unos 53 meses de entrenamiento aprenden ruido y no pueden proyectar una serie que crece. Ganaron SARIMA para 4 a 12 meses y la curva de reservas con modelo para 1 a 3 meses.</p></div>
+        </div>
+
+        <div class="part two">
+          <div class="prose">
+            <h4>Los próximos 12 meses</h4>
+            <p>El pronóstico de noviembre de 2026 a octubre de 2027 espera <strong>265 eventos</strong> (rango de 80%: 144 a 507), <strong>$1.97 millones</strong> de ingreso bruto y <strong>$587 mil</strong> de ganancia neta, unos $48,900 al mes.</p>
+            <p>Supone que el negocio sigue creciendo 49% en eventos contra los últimos 12 meses. Si el crecimiento se frena, la referencia es la banda baja.</p>
+          </div>
+          <div>
+            <h4>Meses que no cubren el costo fijo</h4>
+            <p>En el escenario base, estos meses no alcanzan a cubrir el costo fijo más la renta:</p>
+            <ul class="chips risk">
+              <li>Nov 2026</li><li>Ene 2027</li><li>Feb 2027</li><li>Abr 2027</li>
+            </ul>
+            <p style="margin-top:16px">También generé una alerta de reservas para diciembre: había 2 eventos apartados cuando un año antes había 4, y ese mes cerró con 27. Faltaban unas 3 separaciones por semana durante 8 semanas.</p>
+          </div>
+        </div>
+
+        <div class="part two">
+          <div>
+            <h4>Qué obtuvo la empresa</h4>
+            <ul class="plain">
+              <li>Una sola fuente confiable con 502 eventos de 6 temporadas, que se regenera con un comando.</li>
+              <li>Saber qué deja dinero: los XV dan el volumen y los eventos chicos y empresariales, el margen.</li>
+              <li>Un calendario de publicidad según la estacionalidad y la anticipación de cada tipo de evento.</li>
+              <li>Evidencia para no gastar de más en anuncios.</li>
+              <li>Un pronóstico de 12 meses con meses en riesgo y alertas de reservas.</li>
+            </ul>
+          </div>
+          <div>
+            <h4>Limitaciones</h4>
+            <ul class="plain">
+              <li>La ganancia neta solo tiene 22 meses de historia y se calcula como ingreso por margen.</li>
+              <li>El modelo de anuncios usa 20 meses y es orientativo.</li>
+              <li>La clasificación de paquetes es heurística, por palabras del texto.</li>
+              <li>Los cambios de negocio, como un precio mínimo, se evalúan como escenarios y no dentro del modelo.</li>
+            </ul>
+          </div>
+        </div>
+        <p class="note">Todas las cifras son reales. Omití el nombre de la empresa, los nombres, teléfonos y ubicaciones de clientes, y los nombres de proveedores.</p>
+      </article>
+    </div>
+  </section>
+
+  <section class="block" id="perfil">
+    <div class="wrap">
+      <h2>Perfil</h2>
+      <div class="profile">
+        <div class="skills">
+          <div>
+            <h4>Ingeniería de datos</h4>
+            <p>Azure Databricks, PySpark, Python (pandas), SQL, Snowflake, pipelines ETL y ELT, APIs REST y OAuth 2.0.</p>
+          </div>
+          <div>
+            <h4>Análisis y BI</h4>
+            <p>Power BI, DAX avanzado, modelado de datos, análisis exploratorio y KPIs comerciales.</p>
+          </div>
+          <div>
+            <h4>Ciencia de datos</h4>
+            <p>statsmodels (SARIMA, Holt-Winters), scikit-learn, modelos de conteo y validación con backtest.</p>
+          </div>
+          <div>
+            <h4>Marketing y automatización</h4>
+            <p>Meta Ads, Google Ads, Zapier y ManyChat.</p>
+          </div>
+        </div>
+        <div>
+          <h4>Formación</h4>
+          <ul class="edu">
+            <li><b>Ingeniería en Sistemas Computacionales</b><span>Instituto Tecnológico de Saltillo, especialidad en Ciencia de Datos</span></li>
+            <li><b>Diplomado en Ciencia de Datos e Inteligencia Artificial</b><span>Universidad Autónoma de Coahuila</span></li>
+            <li><b>Diplomado en Ciberseguridad</b><span>Kyndryl</span></li>
+          </ul>
+          <h4 style="margin-top:32px">Experiencia</h4>
+          <p>Experiencia profesional en Accenture, Grupo Soriana y Casas Pecsa.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="contact" id="contacto">
+    <div class="wrap">
+      <h2>¿Buscas a alguien para tu equipo de datos?</h2>
+      <p>Busco un puesto de ingeniero o analista de datos, remoto, híbrido en Monterrey o presencial en Saltillo. Escríbeme y te comparto mi CV.</p>
+      <div class="actions">
+        <a class="btn solid" href="mailto:ingbetobarrera@gmail.com">ingbetobarrera@gmail.com</a>
+        <a class="btn line" href="https://www.linkedin.com/in/heberto-barrera-648614148" rel="noopener" target="_blank">LinkedIn</a>
+        <a class="btn line" href="https://github.com/betobeckermancie" rel="noopener" target="_blank">GitHub</a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">Heberto Barrera, Saltillo, Coahuila. Actualizado en octubre de 2026.</div>
+</footer>
+
+<dialog class="visor" id="visor" aria-label="Imagen ampliada">
+  <button type="button" id="cerrar" aria-label="Cerrar">×</button>
+  <img id="visor-img" src="" alt="">
+  <p id="visor-txt"></p>
+</dialog>
+
+<script>
+(function () {
+  var root = document.documentElement;
+  var btn = document.getElementById('tema');
+  try {
+    var guardado = localStorage.getItem('tema');
+    if (guardado) root.setAttribute('data-theme', guardado);
+  } catch (e) {}
+  btn.addEventListener('click', function () {
+    var actual = root.getAttribute('data-theme') ||
+      (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+    var nuevo = actual === 'dark' ? 'light' : 'dark';
+    root.setAttribute('data-theme', nuevo);
+    try { localStorage.setItem('tema', nuevo); } catch (e) {}
+  });
+
+  var visor = document.getElementById('visor');
+  var vImg = document.getElementById('visor-img');
+  var vTxt = document.getElementById('visor-txt');
+  document.querySelectorAll('.gallery figure').forEach(function (fig) {
+    var b = fig.querySelector('.shot');
+    b.addEventListener('click', function () {
+      if (fig.classList.contains('sin-imagen')) return;
+      var img = fig.querySelector('img');
+      vImg.src = img.currentSrc || img.src;
+      vImg.alt = img.alt;
+      vTxt.textContent = fig.querySelector('figcaption').innerText.replace('\n', ': ');
+      visor.showModal();
+    });
+  });
+  document.getElementById('cerrar').addEventListener('click', function () { visor.close(); });
+  visor.addEventListener('click', function (e) { if (e.target === visor) visor.close(); });
+})();
+</script>
+</body>
+</html>
